@@ -132,6 +132,8 @@ void receiveEvent(int bytes) {
     }
   }
 }
+///////////////////////// S L A V E  3 ///////////////////////////////
+
 #include <Wire.h>       //Libreria I2C  
 char dato;             //Variable de almacenamiento de datos
 const int led[4] = {8, 9, 10, 11}; //Definir un vector con el numero de puertos a utilizarse
