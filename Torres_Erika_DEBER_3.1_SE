@@ -1,1 +1,166 @@
+/*
+   Capitulo III: MODULOS DE COMUNICACION
+   OBJETIVO: Enviar mensjes desde un master hacia 3 esclavos usando comunicacion I2C y comunicacion serial
+   INSTRUCCION:  Mediante comunicación I2C configurar 1 maestro y 3 esclavos. Cada esclavo tendrá conectados 4 leds en sus salidas digitales, 
+                 los cuales deberán encenderse de forma síncrona y ordenada. Los leds del primer esclavo deberán entran en funcionamiento cuando se ingrese 'Cualquier caracter',
+                 luego cuando se ingrese otro 'Cualquier caracter 2' entrará en funcionamiento el esclavo 2, y después cuando se ingrese otro 'Cualquier caracter 3' 
+                 entrará en funcionamiento el esclavo 3.
+   Nombre:  Torres Erika
+   Fecha: 22/02/2021
+   Funciones: Wire.begin()                       //Inicializa el hadware del bus
+              Wire.beginTransmission(address);   //Comienza la transmision
+              Wire.endnTransmission(address);    //Finaliza la transmision
+              Wire.requestFrom(address, nBytes); //Solicita un numero de bytes al esclavo en la direccion address
+*/
 
+///////////////////////// M A S T E R //////////////////////////////////////
+
+#include <Wire.h>      //Libreria I2C  
+char dato;             //Variable de almacenamiento de datos
+int i = 0;             //Variable para el condicional 
+
+void setup() {
+  Wire.begin();        //Inicia comunicacion I2C
+  Serial.begin(9600);  //Inicia comunicacion serial
+}
+
+void loop() {
+  if (Serial.available() > 0) {   //Verificar que exista datos
+    i++;
+    if (i == 1) {                    //Contador para el 1er esclavo. 
+      dato = Serial.read();         //Almacena el dato en la variable- Digitar un caracter
+      Serial.println("Caracter ingresado: ");     //////////
+      Serial.println(dato);     // Imprime el dato
+      Wire.beginTransmission(1);    //Empieza la comunicacion I2C
+      Wire.write(dato);             //Envio dato
+      Wire.endTransmission();       //Termina la comunicacion I2C
+      Wire.requestFrom(3,2);       //Solicita un numero de bytes (2) al esclavo en la direccion address (3)
+      delay(400);
+    }
+    else {
+      if (i == 2) {                 //Contador para el 2do esclavo
+        dato = Serial.read();         //Almacena el dato en la variable
+        Serial.println("Caracter ingresado: ");     //////////
+        Serial.println(dato);     //////////
+        Wire.beginTransmission(2);    //Empieza la comunicacion I2C
+        Wire.write(dato);             //Envio dato
+        Wire.endTransmission();       //Termina la comunicacion I2C
+        Wire.requestFrom(3,2);       //Solicita un numero de bytes (2) al esclavo en la direccion address (3)
+        delay(400);
+      }
+      else {
+        if (i == 3) {                   //Contador para el 3er esclavo
+          dato = Serial.read();         //Almacena el dato en la variable
+          Serial.println("Caracter ingresado: ");     //////////
+          Serial.println(dato);     //////////
+          Wire.beginTransmission(3);    //Empieza la comunicacion I2C
+          Wire.write(dato);             //Envio dato
+          Wire.endTransmission();       //Termina la comunicacion I2C
+          Wire.requestFrom(4,2);       //Solicita un numero de bytes (2) al esclavo en la direccion address (3)
+          delay(400);
+          i = 0;   //Contador vuelve a cero y repite el proceso
+        }
+      }
+    }
+  }
+}
+///////////////////////// S L A V E 1 ///////////////////////////////
+
+#include <Wire.h>       //Libreria I2C  
+char dato;             //Variable de almacenamiento de datos
+const int led[4] = {8, 9, 10, 11}; //Definir un vector con el numero de puertos a utilizarse
+int i = 0;            // Variable para el contador de la definicion de pines como salida
+int j = 0;            // Variable para el contador para encender de los leds sincronamente
+
+void setup() {
+  Wire.begin(1);           //Inicia comunicacion I2C
+  Wire.onReceive(receiveEvent);     //Llamada del metodo
+  Serial.begin(9600);      //Inicia comunicacion serial
+  for (i = 0; i < 4; i++) {
+    pinMode(led[i], OUTPUT);  //desplazamiento, configuracion de pines como salida
+  }
+  
+}
+
+void loop() {
+  //delay(100);                     //Tiempo de espera
+}
+
+void receiveEvent(int bytes) {
+  while (Wire.available()) {          //Detecta si hay datos pendientes por ser leídos 
+    dato = Wire.read();               //Recibe un dato y lo lee 
+    
+    for (j = 0; j < 4; j++) {         // ciclo for enciende cada uno de los 4 leds sincronicamente
+      digitalWrite(led[j], HIGH);
+      delay(10000);
+      digitalWrite(led[j], LOW);
+      delay(10000);
+    }
+  }
+}
+///////////////////////// S L A V E  2 ///////////////////////////////
+ 
+#include <Wire.h>       //Libreria I2C  
+char dato;             //Variable de almacenamiento de datos
+const int led[4] = {8, 9, 10, 11}; //Definir un vector con el numero de puertos a utilizarse
+int i = 0;            // Variable para el contador de la definicion de pines como salida
+int j = 0;            // Variable para el contador para encender de los leds sincronamente
+
+void setup() {
+  Wire.begin(2);           //Inicia comunicacion I2C
+  Wire.onReceive(receiveEvent);     //Llamada del metodo
+  Serial.begin(9600);      //Inicia comunicacion serial
+  for (i = 0; i < 4; i++) {
+    pinMode(led[i], OUTPUT);  //desplazamiento, configuracion de pines como salida
+  }
+  
+}
+
+void loop() {
+  //delay(100);                     //Tiempo de espera
+}
+
+void receiveEvent(int bytes) {
+  while (Wire.available()) {          //Detecta si hay datos pendientes por ser leídos 
+    dato = Wire.read();               //Recibe un dato y lo lee 
+    
+    for (j = 0; j < 4; j++) {         // ciclo for enciende cada uno de los 4 leds sincronicamente
+      digitalWrite(led[j], HIGH);
+      delay(10000);
+      digitalWrite(led[j], LOW);
+      delay(10000);
+    }
+  }
+}
+#include <Wire.h>       //Libreria I2C  
+char dato;             //Variable de almacenamiento de datos
+const int led[4] = {8, 9, 10, 11}; //Definir un vector con el numero de puertos a utilizarse
+int i = 0;            // Variable para el contador de la definicion de pines como salida
+int j = 0;            // Variable para el contador para encender de los leds sincronamente
+
+void setup() {
+  Wire.begin(3);           //Inicia comunicacion I2C
+  Wire.onReceive(receiveEvent);     //Llamada del metodo
+  Serial.begin(9600);      //Inicia comunicacion serial
+  for (i = 0; i < 4; i++) {
+    pinMode(led[i], OUTPUT);  //desplazamiento, configuracion de pines como salida
+  }
+
+}
+
+void loop() {
+  //delay(100);                     //Tiempo de espera
+}
+
+void receiveEvent(int bytes) {
+  while (Wire.available()) {          //Detecta si hay datos pendientes por ser leídos
+    dato = Wire.read();               //Recibe un dato y lo lee
+
+    for (j = 0; j < 4; j++) {         // ciclo for enciende cada uno de los 4 leds sincronicamente
+      digitalWrite(led[j], HIGH);
+      delay(10000);
+      digitalWrite(led[j], LOW);
+      delay(10000);
+    }
+  }
+}
