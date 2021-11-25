@@ -1,0 +1,74 @@
+/*
+ * CAPITULO IV: PERIFERICOS ESPECIALES 
+ * DEBER 4.1 : CAD Y PWM 
+ * INSTRUCCION: Realizar un sistema en el cual se conecten 2 motores (parecido al diagrama que se utilizo en clase). 
+ *              Los datos de CAD, V y PWM se deben visulizar en una LCD para cada motor.  
+ *              A traves de la activación de un botón y un switch (el funcionamiento de un motor dependerá de la activación de un botón 
+ *              y el otro dependerá de la activación de un switch, a su elección) entrará en funcionamiento del motor que corresponda y 
+ *              se visualizará en la LCD de ese motor los datos de CAD, Voltaje y PWM.
+ *              
+ * NOMBRE: Erika Dayana Torres
+ * Fecha: 26/11/2021
+ * FUNCIONES:     analogRead(conversor)
+ *                           conversor -> A0 - A5
+ *                analogWrite(pin,dutty)
+ *                            pin -> pines con ~, dutty -> 0-255
+ */
+ #include <LiquidCrystal.h>                //Libreria para el lcd 
+
+ LiquidCrystal lcd1(13,12,5,4,3,2);        //Seleccion de pines para la LCD1
+ LiquidCrystal lcd2(9,8,7,6,1,0);         //Seleccion de pines para la LCD2
+     
+
+ int conversor;                           //Variable para adquirir datos del conversor entre 0 - 1023
+ float voltaje;                           //Variable de conversion de conversor a voltaje
+ int dutty;                               //Variable para el uso PWM
+
+void setup() {
+  lcd1.begin(16,2);                        //Inicializa la LCD1
+  lcd2.begin(16,2);                        //Inicializa la LCD2
+}
+
+void loop() {
+  //////////////////////// M O T O R 1-SWITCH //////////////////////
+ 
+  conversor=analogRead(A1);                 //Lectura del canal A0
+  voltaje=(conversor*5.0)/1023.0;           //Conversor de voltaje
+  dutty=conversor/4;                        //Cambio la escala para el dutty cicle
+  analogWrite(11,dutty);                    //Envio de valor al pin 11
+  lcd1.setCursor(0,0);
+  lcd1.print("CAD:");
+  lcd1.setCursor(5,0);
+  lcd1.print(conversor);
+  lcd1.setCursor(0,1);
+  lcd1.print("V");
+  lcd1.setCursor(3,1);
+  lcd1.print(voltaje);
+  lcd1.setCursor(9,1);
+  lcd1.print("PWM");
+  lcd1.setCursor(13,1);
+  lcd1.print((dutty*100)/255);
+  delay(300);
+
+//////////////////////// M O T O R 2-BOTON //////////////////////
+  
+  conversor=analogRead(A0);                 //Lectura del canal A0
+  voltaje=(conversor*5.0)/1023.0;           //Conversor de voltaje
+  dutty=conversor/4;                        //Cambio la escala para el ciclo dutty 
+  analogWrite(10,dutty);                    //Envio de valor al pin 11 analogo
+  lcd2.setCursor(0,0);                      //ubicacion del cursor en la LCD         
+  lcd2.print("CAD:");                       //Mensaje que muetra la lCD
+  lcd2.setCursor(5,0);
+  lcd2.print(conversor);
+  lcd2.setCursor(0,1);
+  lcd2.print("V");
+  lcd2.setCursor(3,1);
+  lcd2.print(voltaje);
+  lcd2.setCursor(9,1);
+  lcd2.print("PWM");
+  lcd2.setCursor(13,1);
+  lcd2.print((dutty*100)/255);
+  delay(300);
+  //lcd1.clear();                             //Limpieza de los dos displays
+  //lcd2.clear(); 
+}
