@@ -1,1 +1,50 @@
+/*
+CAPITULO 6: DISE;O DE INTERFACES 
+EJERCICIOS EN CLASE DE PROCESSING
+DEBER 6.2: REALICE EL RETO 2 PLANTEADO EN LAS DIAPOSITIVAS 
+NOMBRE: ERIKA DAYANA TORRES
+FECHA: 23/01/2022
+*/
 
+void setup(){
+  size(500,500);
+  background(#BCBBBA);
+  textSize(30);
+  fill(0);
+  text("Presione el Botón para",90,40);
+  text("Encender o Apagar el LED",70,70);
+  fill(#EA070F);
+  ellipse(250,290,320,320);
+  fill(0);
+  text("!APAGADO¡",160,290);
+}
+
+void draw(){
+  
+}
+
+void mousePressed(){
+  if(mouseButton==RIGHT){
+    fill(#60052f);
+    ellipse(250,290,320,320);
+  }
+  if(mouseButton==LEFT){
+    fill(#1C9839);
+    ellipse(250,290,320,320);
+  }
+}
+
+void mouseReleased(){
+  if(mouseButton==RIGHT){
+    fill(#05FF41);
+    ellipse(250,290,320,320);
+    fill(0);
+    text("!ENCENDIDO¡",160,290);
+  }
+  if(mouseButton==LEFT){
+    fill(#EA070F);
+    ellipse(250,290,320,320);
+    fill(0);
+    text("!APAGADO¡",160,290);
+  }
+}
