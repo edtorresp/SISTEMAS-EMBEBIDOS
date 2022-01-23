@@ -1,1 +1,63 @@
 
+/*
+  CAPÍTULO 5: FUNCIONES ESPECÍFICAS
+  DEBER: De acuerdo a lo explicado en clase, realizar un programa que envíe cualquier tipo de dato entre la comunicación de 2 tareas, en RTOS.
+  OBJETIVO: Ejecutar tareas directamente en el Kernel del uC.
+  ESTUDIANTE: Erika Dayana Torres
+  FECHA: 14/01/2022
+*/
+
+//LIBRERIAS
+#include <Arduino_FreeRTOS.h>  //Libreria RTOS
+#include "queue.h"              //Libreria Queue
+
+//OBJETO
+QueueHandle_t yearQueue;    //Creacion de un objeto
+ int cont=0;   //Contador ciclo while
+ int fundacion=1986; //Contador
+
+void setup() {
+  Serial.begin(9600);  //Empieza cx serial
+  yearQueue=xQueueCreate(5, sizeof(int32_t)); //Creacion de la trama o paquete
+  xTaskCreate(vSenderTask,"Sender Task",100,NULL,1,NULL); //Creacion tarea para enviar datos
+  xTaskCreate(vReceiverTask,"Receiver Task",100,NULL,1,NULL); //Creacion tarea para recibir datos
+}
+
+void vSenderTask(void *pvParameters){  //Metodo tarea de enviar
+  int32_t valorEnviar=0;  //Variable que se va a enviar
+  BaseType_t qStatus;   //Permite conocer el estado del envio
+  
+  while(1){
+    valorEnviar ++;
+    qStatus=xQueueSendToFront(yearQueue,&valorEnviar,0);  //Envía datos al inicio de la cola
+    Serial.print("Valor enviado: ");
+    Serial.println(valorEnviar);
+    vTaskDelay(50);    //Delay
+  }
+}
+
+void vReceiverTask(void *pvParameters){  //Metodo Recibir
+  Serial.println("Envio de tareas");
+  Serial.println("Sistema iniciado");
+  Serial.println("Fundacion UTN");
+  
+  int32_t valorReci;  //valor recibido
+  BaseType_t qStatus; //Permite conocer el estado del envio
+  
+//  Serial.println("Envio de tareas");
+//  Serial.println("Sistema iniciado");
+//  Serial.println("Fundacion UTN");
+  
+  while(cont<36){
+    cont++;
+    fundacion ++;
+    
+    xQueueReceive(yearQueue, &valorReci,500); 
+    Serial.print("Valor recibido: ");
+    Serial.println(valorReci + String(" # Fundacion UTN ") + fundacion); //Imprimimos el valor recibido y se concatena
+    vTaskDelay(50);  //Delay
+  }
+}
+
+void loop(){
+  }
