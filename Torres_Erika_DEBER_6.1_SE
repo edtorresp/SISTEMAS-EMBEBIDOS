@@ -1,1 +1,45 @@
+/*
+CAPITULO 6: DISE;O DE INTERFACES 
+EJERCICIOS EN CLASE DE PROCESSING
+OBJETIVO: MOSTRAR EL FUNCIONAMIENTO DE ALGUNOS PROGRAMAS
+NOMBRE: ERIKA DAYANA TORRES
+FECHA: 20/01/2022
+*/
+
+void setup(){
+  size(500,500);
+  background(0);
+}
+
+void draw(){
+  noStroke();
+  fill(0);
+  rect(0,0,500,500);
+  noFill();
+  
+  fill(#FF7E15);
+  stroke(#FF7E15);
+  rect(20,20,460,470);
+  
+  stroke(#120CF0);
+  strokeWeight(10);
+  line(0,0,500,500); 
+  
+  stroke(#120CF0);
+  strokeWeight(10);
+  line(0,500,500,0); 
+  
+  noStroke();
+  fill(255);
+  ellipse(width/2,width/2,380,380);
+  noFill();
+  
+  stroke(0,255,0);
+  strokeWeight(9);
+  ellipse(width/2,width/2,260,260);
+  
+  noStroke();
+  fill(255,0,0);
+  ellipse(width/2,width/2,250,250);
+}
 
